@@ -9,6 +9,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ import butterknife.ButterKnife;
  */
 
 public class MainFragment extends Fragment
-        implements MainContract.View, PostAdapter.PostAdapterListener {
+        implements MainContract.View {
 
     private static final String TAG = MainFragment.class.getName();
 
@@ -34,6 +36,10 @@ public class MainFragment extends Fragment
 
     @BindView(R.id.fm_recyclerview)
     RecyclerView mRecyclerView;
+    @BindView(R.id.fm_tv_empty_list)
+    TextView mEmptyListTextView;
+    @BindView(R.id.fm_progress_bar_layout)
+    RelativeLayout mProgressBarLayout;
 
     public MainFragment() {}
 
@@ -58,6 +64,12 @@ public class MainFragment extends Fragment
         ButterKnife.bind(this, view);
 
         mPostAdapter = new PostAdapter(new ArrayList<Post>(0));
+        mPostAdapter.setListener(new PostAdapter.PostAdapterListener() {
+            @Override
+            public void onItemClick(Post post) {
+                Toast.makeText(getActivity(), "on item clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mPostAdapter);
@@ -77,21 +89,20 @@ public class MainFragment extends Fragment
 
     @Override
     public void setLoadingIndicator(boolean active) {
-
+        mProgressBarLayout.setVisibility(active ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void showPosts(List<Post> postList) {
         mPostAdapter.replaceData(postList);
+        mRecyclerView.setVisibility(View.VISIBLE);
+        mEmptyListTextView.setVisibility(View.GONE);
     }
 
     @Override
     public void showPostsEmpty() {
-
-    }
-
-    @Override
-    public void onItemClick(Post post) {
-        Toast.makeText(getActivity(), "on item clicked", Toast.LENGTH_SHORT).show();
+        mEmptyListTextView.setText("POST LIST EMPTY");
+        mEmptyListTextView.setVisibility(View.VISIBLE);
+        mRecyclerView.setVisibility(View.GONE);
     }
 }

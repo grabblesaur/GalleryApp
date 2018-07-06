@@ -1,7 +1,6 @@
 package bizapp.ru.galleryapp.main;
 
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
@@ -37,15 +36,17 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void loadPosts(boolean forceUpdate) {
+        mMainView.setLoadingIndicator(true);
         mPostRepository.getPosts(new PostDataSource.LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
                 mMainView.showPosts(posts);
+                mMainView.setLoadingIndicator(false);
             }
 
             @Override
             public void onDataNotAvailable() {
-                Log.i(TAG, "onDataNotAvailable: ");
+                mMainView.setLoadingIndicator(false);
             }
         });
     }

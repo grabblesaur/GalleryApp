@@ -27,7 +27,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         void onItemClick(Post post);
     }
 
-    void setListener(PostAdapterListener listener) {
+    public void setListener(PostAdapterListener listener) {
         mListener = listener;
     }
 
