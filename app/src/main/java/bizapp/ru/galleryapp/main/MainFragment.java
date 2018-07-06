@@ -27,7 +27,10 @@ import butterknife.ButterKnife;
 public class MainFragment extends Fragment
         implements MainContract.View, PostAdapter.PostAdapterListener {
 
+    private static final String TAG = MainFragment.class.getName();
+
     private MainContract.Presenter mPresenter;
+    private PostAdapter mPostAdapter;
 
     @BindView(R.id.fm_recyclerview)
     RecyclerView mRecyclerView;
@@ -53,16 +56,17 @@ public class MainFragment extends Fragment
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
-        PostAdapter postAdapter = new PostAdapter(new ArrayList<Post>(0));
+
+        mPostAdapter = new PostAdapter(new ArrayList<Post>(0));
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(postAdapter);
+        mRecyclerView.setAdapter(mPostAdapter);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        mPresenter.start();
+        mPresenter.start();
     }
 
 
@@ -78,7 +82,7 @@ public class MainFragment extends Fragment
 
     @Override
     public void showPosts(List<Post> postList) {
-
+        mPostAdapter.replaceData(postList);
     }
 
     @Override

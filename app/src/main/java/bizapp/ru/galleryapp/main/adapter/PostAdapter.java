@@ -1,6 +1,7 @@
 package bizapp.ru.galleryapp.main.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import butterknife.ButterKnife;
  */
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
+
+    private static final String TAG = PostAdapter.class.getName();
 
     public interface PostAdapterListener {
         void onItemClick(Post post);
@@ -47,9 +50,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         holder.onBind(mPostList.get(position));
     }
 
+    public void replaceData(List<Post> postList) {
+        if (postList == null) {
+            throw new NullPointerException();
+        }
+        Log.i(TAG, "replaceData: " + postList.size());
+        mPostList = postList;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
-        return 0;
+        return mPostList.size();
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder {

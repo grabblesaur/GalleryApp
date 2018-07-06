@@ -2,22 +2,27 @@
 <LinearLayout
     android:id="@+id/item_post_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:paddingLeft="@dimen/item_post_padding_horizontal"
     android:paddingRight="@dimen/item_post_padding_horizontal"
     android:paddingTop="@dimen/item_post_padding_vertical"
     android:paddingBottom="@dimen/item_post_padding_vertical"
+    android:layout_margin="@dimen/item_post_internal_margin"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/item_post_title"
+        tools:text="POST_TITLE"
         android:layout_marginBottom="@dimen/item_post_internal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/item_post_description"
+        tools:text="POST_DESCRIPTION"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

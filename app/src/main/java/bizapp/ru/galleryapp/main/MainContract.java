@@ -24,7 +24,7 @@ public interface MainContract {
 
     interface Presenter extends BasePresenter {
 
-        void loadPosts();
+        void loadPosts(boolean forceUpdate);
 
     }
 
