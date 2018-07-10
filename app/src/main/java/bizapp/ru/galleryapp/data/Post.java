@@ -51,7 +51,7 @@ public final class Post {
         return mPublishedAt;
     }
 
-    class Source {
+    public class Source {
         @SerializedName("id")
         private String mId;
         @SerializedName("name")

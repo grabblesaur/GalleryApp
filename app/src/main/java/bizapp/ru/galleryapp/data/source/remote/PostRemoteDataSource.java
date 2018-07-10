@@ -1,6 +1,7 @@
 package bizapp.ru.galleryapp.data.source.remote;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import bizapp.ru.galleryapp.api.ApiClient;
 import bizapp.ru.galleryapp.api.ApiService;

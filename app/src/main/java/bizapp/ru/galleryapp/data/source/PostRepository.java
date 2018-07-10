@@ -3,6 +3,7 @@ package bizapp.ru.galleryapp.data.source;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -92,7 +93,7 @@ public class PostRepository implements PostDataSource {
             mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
                 @Override
                 public void onPostsLoaded(List<Post> posts) {
-//                    refreshCache(posts);
+                    refreshCache(posts);
                     callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
                 }
 
@@ -108,7 +109,7 @@ public class PostRepository implements PostDataSource {
         mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
-//                refreshCache(posts);
+                refreshCache(posts);
                 callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
             }
 
@@ -119,15 +120,15 @@ public class PostRepository implements PostDataSource {
         });
     }
 
-//    private void refreshCache(List<Post> posts) {
-//        if (mCachedPosts == null) {
-//            mCachedPosts = new LinkedHashMap<>();
-//        }
-//        mCachedPosts.clear();
-//        for (Post post : posts) {
-//            mCachedPosts.put(post.getId(), post);
-//        }
-//        mCacheIsDirty = false;
-//    }
+    private void refreshCache(List<Post> posts) {
+        if (mCachedPosts == null) {
+            mCachedPosts = new LinkedHashMap<>();
+        }
+        mCachedPosts.clear();
+        for (Post post : posts) {
+            mCachedPosts.put(post.getSource().getId(), post);
+        }
+        mCacheIsDirty = false;
+    }
 
 }
