@@ -23,9 +23,4 @@ public interface PostDataSource {
     }
 
     void getPosts(@NonNull LoadPostsCallback callback);
-
-    void savePost(@NonNull Post post);
-
-    void deleteAllPosts();
-
 }

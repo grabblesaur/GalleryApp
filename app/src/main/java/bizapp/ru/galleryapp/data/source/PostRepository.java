@@ -3,7 +3,6 @@ package bizapp.ru.galleryapp.data.source;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -93,7 +92,7 @@ public class PostRepository implements PostDataSource {
             mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
                 @Override
                 public void onPostsLoaded(List<Post> posts) {
-                    refreshCache(posts);
+//                    refreshCache(posts);
                     callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
                 }
 
@@ -105,35 +104,11 @@ public class PostRepository implements PostDataSource {
         }
     }
 
-    @Override
-    public void savePost(@NonNull Post post) {
-        mPostRemoteDataSource.savePost(post);
-        mPostLocalDataSource.savePost(post);
-
-        // Do in memory cache update to keep the app UI up to date
-        if (mCachedPosts == null) {
-            mCachedPosts = new LinkedHashMap<>();
-        }
-        mCachedPosts.put(post.getId(), post);
-    }
-
-    @Override
-    public void deleteAllPosts() {
-        mPostRemoteDataSource.deleteAllPosts();
-        mPostLocalDataSource.deleteAllPosts();
-
-        if (mCachedPosts == null) {
-            mCachedPosts = new LinkedHashMap<>();
-        }
-        mCachedPosts.clear();
-    }
-
     private void getPostsFromRemoteDataSource(@NonNull final LoadPostsCallback callback) {
         mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
-                refreshCache(posts);
-                refreshLocalDataSource(posts);
+//                refreshCache(posts);
                 callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
             }
 
@@ -144,23 +119,15 @@ public class PostRepository implements PostDataSource {
         });
     }
 
-    private void refreshCache(List<Post> posts) {
-        if (mCachedPosts == null) {
-            mCachedPosts = new LinkedHashMap<>();
-        }
-        mCachedPosts.clear();
-        for (Post post : posts) {
-            mCachedPosts.put(post.getId(), post);
-        }
-        mCacheIsDirty = false;
-    }
-
-    private void refreshLocalDataSource(List<Post> posts) {
-        mPostLocalDataSource.deleteAllPosts();
-        for (Post post : posts) {
-            mPostLocalDataSource.savePost(post);
-        }
-    }
-
+//    private void refreshCache(List<Post> posts) {
+//        if (mCachedPosts == null) {
+//            mCachedPosts = new LinkedHashMap<>();
+//        }
+//        mCachedPosts.clear();
+//        for (Post post : posts) {
+//            mCachedPosts.put(post.getId(), post);
+//        }
+//        mCacheIsDirty = false;
+//    }
 
 }

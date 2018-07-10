@@ -1,14 +1,14 @@
 package bizapp.ru.galleryapp.data.source.remote;
 
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-import bizapp.ru.galleryapp.data.Post;
+import bizapp.ru.galleryapp.api.ApiClient;
+import bizapp.ru.galleryapp.api.ApiService;
+import bizapp.ru.galleryapp.data.PostResponse;
 import bizapp.ru.galleryapp.data.source.PostDataSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * Implementation of the data source
@@ -16,17 +16,9 @@ import bizapp.ru.galleryapp.data.source.PostDataSource;
 
 public class PostRemoteDataSource implements PostDataSource {
 
+    private static final String TAG = PostRemoteDataSource.class.getName();
+
     private static PostRemoteDataSource INSTANCE;
-
-    private static final int SERVICE_LATENCY_IN_MILLIS = 5000;
-
-    private final static Map<String, Post> POST_SERVICE_DATA;
-
-    static {
-        POST_SERVICE_DATA = new LinkedHashMap<>(2);
-        addPost("First post title", "Description for first post");
-        addPost("Second post title", "Description for Second post");
-    }
 
     public static PostRemoteDataSource getInstance() {
         if (INSTANCE == null) {
@@ -38,11 +30,6 @@ public class PostRemoteDataSource implements PostDataSource {
     // Prevent direct instantiation.
     private PostRemoteDataSource() {}
 
-    private static void addPost(String title, String description) {
-        Post newPost = new Post(title, description);
-        POST_SERVICE_DATA.put(newPost.getId(), newPost);
-    }
-
     /**
      * Note: {@link LoadPostsCallback#onDataNotAvailable()} is never fired.
      * In a real remote data source implementation, this would be fired if the
@@ -51,23 +38,20 @@ public class PostRemoteDataSource implements PostDataSource {
      */
     @Override
     public void getPosts(@NonNull final LoadPostsCallback callback) {
-        // Simulate network by delaying the execution.
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                callback.onPostsLoaded(new ArrayList<>(POST_SERVICE_DATA.values()));
-            }
-        }, SERVICE_LATENCY_IN_MILLIS);
-    }
-
-    @Override
-    public void savePost(@NonNull Post post) {
-        POST_SERVICE_DATA.put(post.getId(), post);
-    }
-
-    @Override
-    public void deleteAllPosts() {
-        POST_SERVICE_DATA.clear();
+        ApiService apiClient = ApiClient.getInstance();
+        apiClient.getPosts("us", "business", ApiClient.API_KEY)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<PostResponse>() {
+                    @Override
+                    public void accept(PostResponse postResponse) throws Exception {
+                        callback.onPostsLoaded(postResponse.getPosts());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        callback.onDataNotAvailable();
+                    }
+                });
     }
 }

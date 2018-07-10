@@ -1,9 +1,6 @@
 package bizapp.ru.galleryapp.data;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
-import java.util.UUID;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by android on 05.07.2018.
@@ -11,41 +8,61 @@ import java.util.UUID;
 
 public final class Post {
 
-    @NonNull
-    private final String mId;
+    @SerializedName("source")
+    private Source mSource;
+    @SerializedName("author")
+    private String mAuthor;
+    @SerializedName("title")
+    private String mTitle;
+    @SerializedName("description")
+    private String mDescription;
+    @SerializedName("url")
+    private String mUrl;
+    @SerializedName("urlToImage")
+    private String mUrlToImage;
+    @SerializedName("publishedAt")
+    private String mPublishedAt;
 
-    @Nullable
-    private final String mTitle;
-
-    @Nullable
-    private final String mDescription;
-
-
-    public Post(@NonNull String id,
-                @Nullable String title,
-                @Nullable String description) {
-        mId = id;
-        mTitle = title;
-        mDescription = description;
+    public Source getSource() {
+        return mSource;
     }
 
-    public Post(@Nullable String title,
-                @Nullable String description) {
-        this(UUID.randomUUID().toString(), title, description);
+    public String getAuthor() {
+        return mAuthor;
     }
 
-    @NonNull
-    public String getId() {
-        return mId;
-    }
-
-    @Nullable
     public String getTitle() {
         return mTitle;
     }
 
-    @Nullable
     public String getDescription() {
         return mDescription;
+    }
+
+    public String getUrl() {
+        return mUrl;
+    }
+
+    public String getUrlToImage() {
+        return mUrlToImage;
+    }
+
+    public String getPublishedAt() {
+        return mPublishedAt;
+    }
+
+    class Source {
+        @SerializedName("id")
+        private String mId;
+        @SerializedName("name")
+        private String mName;
+
+        public String getId() {
+            return mId;
+        }
+
+        public String getName() {
+            return mName;
+        }
     }
 }
