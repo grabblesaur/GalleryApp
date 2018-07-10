@@ -63,13 +63,14 @@ public class PostFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        mPostAdapter = new PostAdapter(new ArrayList<Post>(0));
-        mPostAdapter.setListener(new PostAdapter.PostAdapterListener() {
-            @Override
-            public void onItemClick(Post post) {
-                Toast.makeText(getActivity(), "on item clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
+        mPostAdapter = new PostAdapter(getActivity(),
+                new ArrayList<Post>(0),
+                new PostAdapter.PostAdapterListener() {
+                    @Override
+                    public void onItemClick(Post post) {
+                        Toast.makeText(getActivity(), "on item clicked", Toast.LENGTH_SHORT).show();
+                    }
+                });
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mPostAdapter);

@@ -15,7 +15,7 @@ import bizapp.ru.galleryapp.data.source.PostRepository;
 
 public class PostPresenter implements PostContract.Presenter {
 
-    private static final String TAG = PostPresenter.class.getName();
+    private static final String TAG = PostPresenter.class.getSimpleName();
 
     private final PostRepository mPostRepository;
     private final PostContract.View mMainView;
@@ -51,6 +51,7 @@ public class PostPresenter implements PostContract.Presenter {
             @Override
             public void onDataNotAvailable() {
                 mMainView.setLoadingIndicator(false);
+                mMainView.showPostsEmpty();
             }
         });
     }

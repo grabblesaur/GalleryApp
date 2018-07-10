@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class PostRemoteDataSource implements PostDataSource {
 
-    private static final String TAG = PostRemoteDataSource.class.getName();
+    private static final String TAG = PostRemoteDataSource.class.getSimpleName();
 
     private static PostRemoteDataSource INSTANCE;
 
@@ -40,12 +40,14 @@ public class PostRemoteDataSource implements PostDataSource {
     @Override
     public void getPosts(@NonNull final LoadPostsCallback callback) {
         ApiService apiClient = ApiClient.getInstance();
-        apiClient.getPosts("us", "business", ApiClient.API_KEY)
+        apiClient.getPosts("ru", "business", ApiClient.API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PostResponse>() {
                     @Override
                     public void accept(PostResponse postResponse) throws Exception {
+                        Log.i(TAG, "onNext: " + postResponse.getTotalResults());
+                        Log.i(TAG, "onNext: " + postResponse.getPosts().size());
                         callback.onPostsLoaded(postResponse.getPosts());
                     }
                 }, new Consumer<Throwable>() {

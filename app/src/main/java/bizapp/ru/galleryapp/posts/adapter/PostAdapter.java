@@ -1,17 +1,24 @@
 package bizapp.ru.galleryapp.posts.adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.Post;
+import bizapp.ru.galleryapp.utils.ImageUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -22,20 +29,19 @@ import butterknife.ButterKnife;
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
     private static final String TAG = PostAdapter.class.getName();
+    private Context mContext;
 
     public interface PostAdapterListener {
         void onItemClick(Post post);
     }
 
-    public void setListener(PostAdapterListener listener) {
-        mListener = listener;
-    }
-
     private PostAdapterListener mListener;
     private List<Post> mPostList;
 
-    public PostAdapter(List<Post> postList) {
+    public PostAdapter(Context context, List<Post> postList, PostAdapterListener listener) {
+        mContext = context;
         mPostList = postList;
+        mListener = listener;
     }
 
     @Override
@@ -54,7 +60,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         if (postList == null) {
             throw new NullPointerException();
         }
-        Log.i(TAG, "replaceData: " + postList.size());
         mPostList = postList;
         notifyDataSetChanged();
     }
@@ -68,10 +73,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
 
         @BindView(R.id.item_post_layout)
         LinearLayout mLayout;
+        @BindView(R.id.item_post_image)
+        ImageView mImage;
+        @BindView(R.id.item_post_source)
+        TextView mSourceTextView;
         @BindView(R.id.item_post_title)
-        TextView mTitle;
+        TextView mTitleTextView;
         @BindView(R.id.item_post_description)
-        TextView mDescription;
+        TextView mDescriptionTextView;
 
         PostViewHolder(View itemView) {
             super(itemView);
@@ -87,8 +96,33 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                     }
                 }
             });
-            mTitle.setText(post.getTitle());
-            mDescription.setText(post.getDescription());
+
+            if (post.getUrlToImage() != null && !post.getUrlToImage().isEmpty()) {
+                Glide.with(mContext)
+                        .load(post.getUrlToImage())
+                        .apply(RequestOptions
+                                .overrideOf(ImageUtils.convertDpToPixel(mLayout.getMeasuredWidth(), mContext),
+                                        ImageUtils.convertDpToPixel(150, mContext)))
+                        .into(mImage);
+            }
+
+            mTitleTextView.setText(post.getTitle());
+            mDescriptionTextView.setText(post.getDescription());
+            if (post.getSource() != null &&
+                    post.getSource().getName() != null &&
+                    !post.getSource().getName().isEmpty()) {
+                mSourceTextView.setText(String.format("Источник: %s", post.getSource().getName()));
+                if (post.getUrl() != null && !post.getUrl().isEmpty()) {
+                    mDescriptionTextView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent intent = new Intent(Intent.ACTION_VIEW);
+                            intent.setData(Uri.parse(post.getUrl()));
+                            mContext.startActivity(intent);
+                        }
+                    });
+                }
+            }
         }
     }
 }

@@ -1,11 +1,10 @@
 package bizapp.ru.galleryapp.data.source;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import bizapp.ru.galleryapp.data.Post;
 
@@ -19,6 +18,8 @@ import bizapp.ru.galleryapp.data.Post;
 
 public class PostRepository implements PostDataSource {
 
+    private static final String TAG = PostRepository.class.getSimpleName();
+
     private static PostRepository INSTANCE = null;
 
     private final PostDataSource mPostRemoteDataSource;
@@ -28,7 +29,7 @@ public class PostRepository implements PostDataSource {
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    Map<String, Post> mCachedPosts;
+    List<Post> mCachedPosts;
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested.
@@ -81,7 +82,7 @@ public class PostRepository implements PostDataSource {
 
         //Respond immediately with cache if available and not dirty
         if (mCachedPosts != null && !mCacheIsDirty) {
-            callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
+            callback.onPostsLoaded(mCachedPosts);
             return;
         }
 
@@ -94,7 +95,7 @@ public class PostRepository implements PostDataSource {
                 @Override
                 public void onPostsLoaded(List<Post> posts) {
                     refreshCache(posts);
-                    callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
+                    callback.onPostsLoaded(mCachedPosts);
                 }
 
                 @Override
@@ -109,8 +110,9 @@ public class PostRepository implements PostDataSource {
         mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
+                Log.i(TAG, "onPostsLoaded: " + posts.size());
                 refreshCache(posts);
-                callback.onPostsLoaded(new ArrayList<>(mCachedPosts.values()));
+                callback.onPostsLoaded(mCachedPosts);
             }
 
             @Override
@@ -122,11 +124,11 @@ public class PostRepository implements PostDataSource {
 
     private void refreshCache(List<Post> posts) {
         if (mCachedPosts == null) {
-            mCachedPosts = new LinkedHashMap<>();
+            mCachedPosts = new ArrayList<>();
         }
         mCachedPosts.clear();
         for (Post post : posts) {
-            mCachedPosts.put(post.getSource().getId(), post);
+            mCachedPosts.add(post);
         }
         mCacheIsDirty = false;
     }
