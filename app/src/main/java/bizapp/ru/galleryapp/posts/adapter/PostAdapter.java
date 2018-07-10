@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.main.adapter;
+package bizapp.ru.galleryapp.posts.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;

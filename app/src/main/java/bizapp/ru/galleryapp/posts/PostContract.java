@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.main;
+package bizapp.ru.galleryapp.posts;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import bizapp.ru.galleryapp.data.Post;
  * This specifies the contract between the view and the presenter.
  */
 
-public interface MainContract {
+public interface PostContract {
 
     interface View extends BaseView<Presenter> {
 

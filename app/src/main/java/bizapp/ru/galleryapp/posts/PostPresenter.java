@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.main;
+package bizapp.ru.galleryapp.posts;
 
 import android.support.annotation.NonNull;
 
@@ -9,21 +9,21 @@ import bizapp.ru.galleryapp.data.source.PostDataSource;
 import bizapp.ru.galleryapp.data.source.PostRepository;
 
 /**
- * Listens to user actions from the UI ({@link MainFragment}), retrieves the data
+ * Listens to user actions from the UI ({@link PostFragment}), retrieves the data
  * and updates the UI when required.
  */
 
-public class MainPresenter implements MainContract.Presenter {
+public class PostPresenter implements PostContract.Presenter {
 
-    private static final String TAG = MainPresenter.class.getName();
+    private static final String TAG = PostPresenter.class.getName();
 
     private final PostRepository mPostRepository;
-    private final MainContract.View mMainView;
+    private final PostContract.View mMainView;
 
     private boolean mFirstLoad = true;
 
-    public MainPresenter(@NonNull PostRepository postRepository,
-                         @NonNull MainContract.View view) {
+    public PostPresenter(@NonNull PostRepository postRepository,
+                         @NonNull PostContract.View view) {
         mPostRepository = postRepository;
         mMainView = view;
         mMainView.setPresenter(this);
@@ -40,8 +40,12 @@ public class MainPresenter implements MainContract.Presenter {
         mPostRepository.getPosts(new PostDataSource.LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
-                mMainView.showPosts(posts);
-                mMainView.setLoadingIndicator(false);
+                if (posts.isEmpty()) {
+                    mMainView.showPostsEmpty();
+                } else {
+                    mMainView.showPosts(posts);
+                    mMainView.setLoadingIndicator(false);
+                }
             }
 
             @Override

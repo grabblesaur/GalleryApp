@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.main;
+package bizapp.ru.galleryapp.posts;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.Post;
-import bizapp.ru.galleryapp.main.adapter.PostAdapter;
+import bizapp.ru.galleryapp.posts.adapter.PostAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -26,12 +26,12 @@ import butterknife.ButterKnife;
  * Created by android on 06.07.2018.
  */
 
-public class MainFragment extends Fragment
-        implements MainContract.View {
+public class PostFragment extends Fragment
+        implements PostContract.View {
 
-    private static final String TAG = MainFragment.class.getName();
+    private static final String TAG = PostFragment.class.getName();
 
-    private MainContract.Presenter mPresenter;
+    private PostContract.Presenter mPresenter;
     private PostAdapter mPostAdapter;
 
     @BindView(R.id.fm_recyclerview)
@@ -41,10 +41,10 @@ public class MainFragment extends Fragment
     @BindView(R.id.fm_progress_bar_layout)
     RelativeLayout mProgressBarLayout;
 
-    public MainFragment() {}
+    public PostFragment() {}
 
-    public static MainFragment newInstance() {
-        return new MainFragment();
+    public static PostFragment newInstance() {
+        return new PostFragment();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class MainFragment extends Fragment
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        return inflater.inflate(R.layout.fragment_post, container, false);
     }
 
     @Override
@@ -83,7 +83,7 @@ public class MainFragment extends Fragment
 
 
     @Override
-    public void setPresenter(@NonNull MainContract.Presenter presenter) {
+    public void setPresenter(@NonNull PostContract.Presenter presenter) {
         mPresenter = presenter;
     }
 

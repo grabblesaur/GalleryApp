@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.main;
+package bizapp.ru.galleryapp.posts;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,9 +11,9 @@ import bizapp.ru.galleryapp.data.source.remote.PostRemoteDataSource;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class PostActivity extends AppCompatActivity {
 
-    private MainPresenter mMainPresenter;
+    private PostPresenter mMainPresenter;
 
     @BindView(R.id.am_toolbar)
     Toolbar mToolbar;
@@ -21,9 +21,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
-        MainFragment fragment = MainFragment.newInstance();
+        PostFragment fragment = PostFragment.newInstance();
 
         getSupportFragmentManager()
                 .beginTransaction()
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 .commit();
 
         // Create the presenter
-        mMainPresenter = new MainPresenter(
+        mMainPresenter = new PostPresenter(
                 PostRepository.getInstance(
                         PostRemoteDataSource.getInstance(),
                         PostLocalDataSource.getInstance()),
