@@ -111,6 +111,23 @@ public class PostRepository implements PostDataSource {
         }
     }
 
+    /**
+     * pass action to localDataSource to save Post
+     * @param post
+     */
+    @Override
+    public void savePost(Post post) {
+
+    }
+
+    /**
+     * pass action to localDataStorage to remove Posts
+     */
+    @Override
+    public void deleteAllPosts() {
+
+    }
+
     private void getPostsFromRemoteDataSource(final String category, @NonNull final LoadPostsCallback callback) {
         mPostRemoteDataSource.getPosts(category, new LoadPostsCallback() {
             @Override

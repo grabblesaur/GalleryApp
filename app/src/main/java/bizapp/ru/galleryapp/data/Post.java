@@ -23,6 +23,12 @@ public final class Post {
     @SerializedName("publishedAt")
     private String mPublishedAt;
 
+    public Post(String title, String description, String sourceName) {
+        mTitle = title;
+        mDescription = description;
+        mSource = new Source(null, sourceName);
+    }
+
     public Source getSource() {
         return mSource;
     }
@@ -56,6 +62,11 @@ public final class Post {
         private String mId;
         @SerializedName("name")
         private String mName;
+
+        public Source(String id, String name) {
+            mId = id;
+            mName = name;
+        }
 
         public String getId() {
             return mId;

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import bizapp.ru.galleryapp.api.ApiClient;
 import bizapp.ru.galleryapp.api.ApiService;
+import bizapp.ru.galleryapp.data.Post;
 import bizapp.ru.galleryapp.data.PostResponse;
 import bizapp.ru.galleryapp.data.source.PostDataSource;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -54,5 +55,15 @@ public class PostRemoteDataSource implements PostDataSource {
                         callback.onDataNotAvailable();
                     }
                 });
+    }
+
+    @Override
+    public void savePost(Post post) {
+        // do nothing
+    }
+
+    @Override
+    public void deleteAllPosts() {
+        // do nothing
     }
 }
