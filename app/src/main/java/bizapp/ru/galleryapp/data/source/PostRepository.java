@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import bizapp.ru.galleryapp.data.Post;
@@ -29,13 +30,14 @@ public class PostRepository implements PostDataSource {
     /**
      * This variable has package local visibility so it can be accessed from tests.
      */
-    List<Post> mCachedPosts;
+    LinkedHashMap<String, List<Post>> mCachedPosts;
 
     /**
      * Marks the cache as invalid, to force an update the next time data is requested.
      * This variable has package local visibility so it can be accessed from tests.
      */
     boolean mCacheIsDirty = false;
+    private String mCategory = "business";
 
     // Prevent direct instantiation
     private PostRepository(@NonNull PostDataSource postRemoteDataSource,
@@ -78,41 +80,43 @@ public class PostRepository implements PostDataSource {
      * @param callback
      */
     @Override
-    public void getPosts(@NonNull final LoadPostsCallback callback) {
+    public void getPosts(final String category, @NonNull final LoadPostsCallback callback) {
+
+        Log.i(TAG, "getPosts: " + category);
 
         //Respond immediately with cache if available and not dirty
-        if (mCachedPosts != null && !mCacheIsDirty) {
-            callback.onPostsLoaded(mCachedPosts);
+        if (mCachedPosts != null && mCachedPosts.containsKey(category) && !mCacheIsDirty) {
+            callback.onPostsLoaded(new ArrayList<>(mCachedPosts.get(category)));
             return;
         }
 
         if (mCacheIsDirty) {
             // if the cache is dirty we need to fetch new data from the network.
-            getPostsFromRemoteDataSource(callback);
+            getPostsFromRemoteDataSource(category, callback);
         } else {
+            // TODO: 11.07.2018 replace remote with local
             // Query the local storage if available. If not, query the network.
-            mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
+            mPostRemoteDataSource.getPosts(category, new LoadPostsCallback() {
                 @Override
                 public void onPostsLoaded(List<Post> posts) {
-                    refreshCache(posts);
-                    callback.onPostsLoaded(mCachedPosts);
+                    refreshCache(category, posts);
+                    callback.onPostsLoaded(new ArrayList<>(mCachedPosts.get(category)));
                 }
 
                 @Override
                 public void onDataNotAvailable() {
-                    getPostsFromRemoteDataSource(callback);
+                    getPostsFromRemoteDataSource(category, callback);
                 }
             });
         }
     }
 
-    private void getPostsFromRemoteDataSource(@NonNull final LoadPostsCallback callback) {
-        mPostRemoteDataSource.getPosts(new LoadPostsCallback() {
+    private void getPostsFromRemoteDataSource(final String category, @NonNull final LoadPostsCallback callback) {
+        mPostRemoteDataSource.getPosts(category, new LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
-                Log.i(TAG, "onPostsLoaded: " + posts.size());
-                refreshCache(posts);
-                callback.onPostsLoaded(mCachedPosts);
+                refreshCache(category, posts);
+                callback.onPostsLoaded(new ArrayList<>(mCachedPosts.get(category)));
             }
 
             @Override
@@ -122,15 +126,12 @@ public class PostRepository implements PostDataSource {
         });
     }
 
-    private void refreshCache(List<Post> posts) {
+    private void refreshCache(String category, List<Post> posts) {
         if (mCachedPosts == null) {
-            mCachedPosts = new ArrayList<>();
+            mCachedPosts = new LinkedHashMap<>();
         }
         mCachedPosts.clear();
-        for (Post post : posts) {
-            mCachedPosts.add(post);
-        }
+        mCachedPosts.put(category, posts);
         mCacheIsDirty = false;
     }
-
 }

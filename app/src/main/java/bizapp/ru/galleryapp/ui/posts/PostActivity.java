@@ -3,7 +3,6 @@ package bizapp.ru.galleryapp.ui.posts;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.source.PostRepository;
@@ -24,7 +23,6 @@ public class PostActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate: ");
         setContentView(R.layout.activity_post);
         ButterKnife.bind(this);
 
@@ -41,7 +39,8 @@ public class PostActivity extends AppCompatActivity {
                 PostRepository.getInstance(
                         PostRemoteDataSource.getInstance(),
                         PostLocalDataSource.getInstance()),
-                fragment
+                fragment,
+                category
         );
     }
 }

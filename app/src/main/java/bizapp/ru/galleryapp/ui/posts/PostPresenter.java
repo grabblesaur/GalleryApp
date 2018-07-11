@@ -19,14 +19,17 @@ public class PostPresenter implements PostContract.Presenter {
 
     private final PostRepository mPostRepository;
     private final PostContract.View mMainView;
+    private String mCategory;
 
     private boolean mFirstLoad = true;
 
     public PostPresenter(@NonNull PostRepository postRepository,
-                         @NonNull PostContract.View view) {
+                         @NonNull PostContract.View view,
+                         String category) {
         mPostRepository = postRepository;
         mMainView = view;
         mMainView.setPresenter(this);
+        mCategory = category;
     }
 
     @Override
@@ -37,7 +40,7 @@ public class PostPresenter implements PostContract.Presenter {
     @Override
     public void loadPosts(boolean forceUpdate) {
         mMainView.setLoadingIndicator(true);
-        mPostRepository.getPosts(new PostDataSource.LoadPostsCallback() {
+        mPostRepository.getPosts(mCategory, new PostDataSource.LoadPostsCallback() {
             @Override
             public void onPostsLoaded(List<Post> posts) {
                 if (posts.isEmpty()) {

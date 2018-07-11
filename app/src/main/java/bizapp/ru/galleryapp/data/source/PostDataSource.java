@@ -1,7 +1,5 @@
 package bizapp.ru.galleryapp.data.source;
 
-import android.support.annotation.NonNull;
-
 import java.util.List;
 
 import bizapp.ru.galleryapp.data.Post;
@@ -22,5 +20,5 @@ public interface PostDataSource {
         void onDataNotAvailable();
     }
 
-    void getPosts(@NonNull LoadPostsCallback callback);
+    void getPosts(String category, LoadPostsCallback callback);
 }

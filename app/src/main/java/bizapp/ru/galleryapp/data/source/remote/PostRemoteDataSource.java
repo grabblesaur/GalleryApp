@@ -1,6 +1,5 @@
 package bizapp.ru.galleryapp.data.source.remote;
 
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import bizapp.ru.galleryapp.api.ApiClient;
@@ -38,16 +37,15 @@ public class PostRemoteDataSource implements PostDataSource {
      * @param callback
      */
     @Override
-    public void getPosts(@NonNull final LoadPostsCallback callback) {
+    public void getPosts(String category, final LoadPostsCallback callback) {
         ApiService apiClient = ApiClient.getInstance();
-        apiClient.getPosts("ru", "business", ApiClient.API_KEY)
+        apiClient.getPosts("ru", category, ApiClient.API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<PostResponse>() {
                     @Override
                     public void accept(PostResponse postResponse) throws Exception {
                         Log.i(TAG, "onNext: " + postResponse.getTotalResults());
-                        Log.i(TAG, "onNext: " + postResponse.getPosts().size());
                         callback.onPostsLoaded(postResponse.getPosts());
                     }
                 }, new Consumer<Throwable>() {
