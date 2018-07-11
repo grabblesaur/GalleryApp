@@ -3,7 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_margin="@dimen/item_post_internal_margin"
+    android:layout_marginLeft="@dimen/item_post_layout_margin_horizontal"
+    android:layout_marginRight="@dimen/item_post_layout_margin_horizontal"
+    android:layout_marginTop="@dimen/item_post_layout_margin_vertical"
+    android:layout_marginBottom="@dimen/item_post_layout_margin_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -15,7 +18,7 @@
         <ImageView
             android:id="@+id/item_post_image"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             />
 
         <LinearLayout
@@ -45,15 +48,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <TextView
-                android:id="@+id/item_post_source"
-                android:layout_gravity="end"
-                android:textColor="@android:color/holo_blue_light"
-                tools:text="Источник: Bloomberg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
         </LinearLayout>
+
+        <Button
+            android:id="@+id/item_post_btn_source"
+            style="@style/Widget.AppCompat.Button.Borderless.Colored"
+            android:paddingLeft="@dimen/item_post_padding_horizontal"
+            android:paddingRight="@dimen/item_post_padding_horizontal"
+            android:paddingTop="@dimen/item_post_padding_vertical"
+            android:paddingBottom="@dimen/item_post_padding_vertical"
+            android:layout_gravity="end"
+            android:textColor="@android:color/holo_blue_light"
+            tools:text="Источник: Bloomberg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 

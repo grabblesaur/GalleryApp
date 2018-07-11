@@ -7,18 +7,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import java.util.List;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.Post;
-import bizapp.ru.galleryapp.utils.ImageUtils;
+import bizapp.ru.galleryapp.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -75,12 +73,12 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
         LinearLayout mLayout;
         @BindView(R.id.item_post_image)
         ImageView mImage;
-        @BindView(R.id.item_post_source)
-        TextView mSourceTextView;
         @BindView(R.id.item_post_title)
         TextView mTitleTextView;
         @BindView(R.id.item_post_description)
         TextView mDescriptionTextView;
+        @BindView(R.id.item_post_btn_source)
+        Button mSourceButton;
 
         PostViewHolder(View itemView) {
             super(itemView);
@@ -98,11 +96,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             });
 
             if (post.getUrlToImage() != null && !post.getUrlToImage().isEmpty()) {
-                Glide.with(mContext)
+                GlideApp.with(mContext)
                         .load(post.getUrlToImage())
-                        .apply(RequestOptions
-                                .overrideOf(ImageUtils.convertDpToPixel(mLayout.getMeasuredWidth(), mContext),
-                                        ImageUtils.convertDpToPixel(150, mContext)))
+                        .centerCrop()
                         .into(mImage);
             }
 
@@ -111,9 +107,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             if (post.getSource() != null &&
                     post.getSource().getName() != null &&
                     !post.getSource().getName().isEmpty()) {
-                mSourceTextView.setText(String.format("Источник: %s", post.getSource().getName()));
+                mSourceButton.setText(String.format("Источник: %s", post.getSource().getName()));
                 if (post.getUrl() != null && !post.getUrl().isEmpty()) {
-                    mDescriptionTextView.setOnClickListener(new View.OnClickListener() {
+                    mSourceButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
