@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.posts.adapter;
+package bizapp.ru.galleryapp.ui.posts.adapter;
 
 import android.content.Context;
 import android.content.Intent;

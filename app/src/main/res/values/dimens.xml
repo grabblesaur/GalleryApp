@@ -2,6 +2,7 @@
 <resources>
     <dimen name="item_post_padding_horizontal">16dp</dimen>
     <dimen name="item_post_padding_vertical">12dp</dimen>
-    <dimen name="item_post_layout_margin_horizontal">8dp</dimen>
-    <dimen name="item_post_layout_margin_vertical">12dp</dimen>
+
+    <dimen name="item_layout_margin_horizontal">8dp</dimen>
+    <dimen name="item_layout_margin_vertical">12dp</dimen>
 </resources>

@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_marginLeft="@dimen/item_post_layout_margin_horizontal"
-    android:layout_marginRight="@dimen/item_post_layout_margin_horizontal"
-    android:layout_marginTop="@dimen/item_post_layout_margin_vertical"
-    android:layout_marginBottom="@dimen/item_post_layout_margin_vertical"
+    android:layout_marginLeft="@dimen/item_layout_margin_horizontal"
+    android:layout_marginRight="@dimen/item_layout_margin_horizontal"
+    android:layout_marginTop="@dimen/item_layout_margin_vertical"
+    android:layout_marginBottom="@dimen/item_layout_margin_vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 

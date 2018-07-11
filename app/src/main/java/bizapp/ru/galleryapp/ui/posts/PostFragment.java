@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.posts;
+package bizapp.ru.galleryapp.ui.posts;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.Post;
-import bizapp.ru.galleryapp.posts.adapter.PostAdapter;
+import bizapp.ru.galleryapp.ui.posts.adapter.PostAdapter;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

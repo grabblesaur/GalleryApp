@@ -1,4 +1,4 @@
-package bizapp.ru.galleryapp.posts;
+package bizapp.ru.galleryapp.ui.posts;
 
 import java.util.List;
 
