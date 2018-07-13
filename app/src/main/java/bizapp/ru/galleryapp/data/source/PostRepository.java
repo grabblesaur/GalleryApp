@@ -94,9 +94,8 @@ public class PostRepository implements PostDataSource {
             // if the cache is dirty we need to fetch new data from the network.
             getPostsFromRemoteDataSource(category, callback);
         } else {
-            // TODO: 11.07.2018 replace remote with local
             // Query the local storage if available. If not, query the network.
-            mPostRemoteDataSource.getPosts(category, new LoadPostsCallback() {
+            mPostLocalDataSource.getPosts(category, new LoadPostsCallback() {
                 @Override
                 public void onPostsLoaded(List<Post> posts) {
                     refreshCache(category, posts);
@@ -113,11 +112,12 @@ public class PostRepository implements PostDataSource {
 
     /**
      * pass action to localDataSource to save Post
+     * @param category
      * @param post
      */
     @Override
-    public void savePost(Post post) {
-
+    public void savePost(String category, Post post) {
+        mPostLocalDataSource.savePost(category, post);
     }
 
     /**
@@ -125,7 +125,7 @@ public class PostRepository implements PostDataSource {
      */
     @Override
     public void deleteAllPosts() {
-
+        mPostLocalDataSource.deleteAllPosts();
     }
 
     private void getPostsFromRemoteDataSource(final String category, @NonNull final LoadPostsCallback callback) {
@@ -134,6 +134,9 @@ public class PostRepository implements PostDataSource {
             public void onPostsLoaded(List<Post> posts) {
                 refreshCache(category, posts);
                 callback.onPostsLoaded(new ArrayList<>(mCachedPosts.get(category)));
+                for (Post post : posts) {
+                    savePost(category, post);
+                }
             }
 
             @Override

@@ -38,7 +38,7 @@ public class PostActivity extends AppCompatActivity {
         mMainPresenter = new PostPresenter(
                 PostRepository.getInstance(
                         PostRemoteDataSource.getInstance(),
-                        PostLocalDataSource.getInstance()),
+                        PostLocalDataSource.getInstance(this)),
                 fragment,
                 category
         );

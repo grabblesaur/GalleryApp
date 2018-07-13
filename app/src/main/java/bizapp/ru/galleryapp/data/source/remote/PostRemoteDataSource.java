@@ -58,7 +58,7 @@ public class PostRemoteDataSource implements PostDataSource {
     }
 
     @Override
-    public void savePost(Post post) {
+    public void savePost(String category, Post post) {
         // do nothing
     }
 

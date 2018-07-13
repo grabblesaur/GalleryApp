@@ -47,8 +47,9 @@ public class PostLocalDataSource implements PostDataSource {
                 PostsPersistenceContract.PostsEntry.COLUMN_NAME_DESCRIPTION,
                 PostsPersistenceContract.PostsEntry.COLUMN_NAME_SOURCE,
         };
+
         Cursor c = db
-                .query(PostsPersistenceContract.PostsEntry.TABLE_NAME,
+                .query(getTableName(category),
                         projection, null, null, null, null, null);
         if (c != null && c.getCount() > 0) {
             while (c.moveToNext()) {
@@ -70,21 +71,41 @@ public class PostLocalDataSource implements PostDataSource {
         }
     }
 
+    /**
+     * helper method to determine name of the table by category
+     * @param category
+     * @return
+     */
+    private String getTableName(String category) {
+        String result;
+        switch (category) {
+            case "business" : result = PostsPersistenceContract.PostsEntry.TABLE_NAME_BUSINESS; break;
+            case "sport" : result = PostsPersistenceContract.PostsEntry.TABLE_NAME_SPORT; break;
+            case "science" : result = PostsPersistenceContract.PostsEntry.TABLE_NAME_SCIENCE; break;
+            case "entertainment" : result = PostsPersistenceContract.PostsEntry.TABLE_NAME_ENTERTAINMENT; break;
+            default: result = PostsPersistenceContract.PostsEntry.TABLE_NAME_BUSINESS; break;
+        }
+        return result;
+    }
+
     @Override
-    public void savePost(Post post) {
+    public void savePost(String category, Post post) {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(PostsPersistenceContract.PostsEntry.COLUMN_NAME_TITLE, post.getTitle());
         values.put(PostsPersistenceContract.PostsEntry.COLUMN_NAME_DESCRIPTION, post.getDescription());
         values.put(PostsPersistenceContract.PostsEntry.COLUMN_NAME_SOURCE, post.getSource().getName());
-        db.insert(PostsPersistenceContract.PostsEntry.TABLE_NAME, null, values);
+        db.insert(getTableName(category), null, values);
         db.close();
     }
 
     @Override
     public void deleteAllPosts() {
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
-        db.delete(PostsPersistenceContract.PostsEntry.TABLE_NAME, null, null);
+        db.delete(PostsPersistenceContract.PostsEntry.TABLE_NAME_BUSINESS, null, null);
+        db.delete(PostsPersistenceContract.PostsEntry.TABLE_NAME_SPORT, null, null);
+        db.delete(PostsPersistenceContract.PostsEntry.TABLE_NAME_SCIENCE, null, null);
+        db.delete(PostsPersistenceContract.PostsEntry.TABLE_NAME_ENTERTAINMENT, null, null);
         db.close();
     }
 }

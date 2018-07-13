@@ -22,6 +22,6 @@ public interface PostDataSource {
 
     void getPosts(String category, LoadPostsCallback callback);
     // only for local
-    void savePost(Post post);
+    void savePost(String category, Post post);
     void deleteAllPosts();
 }
