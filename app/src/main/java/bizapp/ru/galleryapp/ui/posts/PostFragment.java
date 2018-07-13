@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,6 +35,8 @@ public class PostFragment extends Fragment
     private PostContract.Presenter mPresenter;
     private PostAdapter mPostAdapter;
 
+    @BindView(R.id.fm_swiperefresh)
+    SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.fm_recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.fm_tv_empty_list)
@@ -74,6 +77,12 @@ public class PostFragment extends Fragment
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mPostAdapter);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPresenter.loadPosts(true);
+            }
+        });
     }
 
     @Override
@@ -81,7 +90,6 @@ public class PostFragment extends Fragment
         super.onResume();
         mPresenter.start();
     }
-
 
     @Override
     public void setPresenter(@NonNull PostContract.Presenter presenter) {
@@ -96,14 +104,20 @@ public class PostFragment extends Fragment
     @Override
     public void showPosts(List<Post> postList) {
         mPostAdapter.replaceData(postList);
+        mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mEmptyListTextView.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void showPostsEmpty() {
         mEmptyListTextView.setText("POST LIST EMPTY");
         mEmptyListTextView.setVisibility(View.VISIBLE);
+        mSwipeRefreshLayout.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.GONE);
+
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

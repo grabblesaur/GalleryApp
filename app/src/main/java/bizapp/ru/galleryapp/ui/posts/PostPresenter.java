@@ -21,6 +21,7 @@ public class PostPresenter implements PostContract.Presenter {
     private final PostContract.View mMainView;
     private String mCategory;
 
+    // TODO: 13.07.2018 make first load always try to remote first
     private boolean mFirstLoad = true;
 
     public PostPresenter(@NonNull PostRepository postRepository,
@@ -39,6 +40,11 @@ public class PostPresenter implements PostContract.Presenter {
 
     @Override
     public void loadPosts(boolean forceUpdate) {
+
+        if (forceUpdate) {
+            mPostRepository.refreshTasks();
+        }
+
         mMainView.setLoadingIndicator(true);
         mPostRepository.getPosts(mCategory, new PostDataSource.LoadPostsCallback() {
             @Override

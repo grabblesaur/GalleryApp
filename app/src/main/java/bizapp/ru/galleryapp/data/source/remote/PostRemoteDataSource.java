@@ -92,4 +92,10 @@ public class PostRemoteDataSource implements PostDataSource {
     public void deleteAllPosts() {
         // do nothing
     }
+
+    @Override
+    public void refreshTasks() {
+        // Not required because the {@link PostRepository} handles the logic of refreshing the
+        // tasks from all the available data sources.
+    }
 }

@@ -108,4 +108,10 @@ public class PostLocalDataSource implements PostDataSource {
         db.delete(PostsPersistenceContract.PostsEntry.TABLE_NAME_ENTERTAINMENT, null, null);
         db.close();
     }
+
+    @Override
+    public void refreshTasks() {
+        // Not required because the {@link PostRepository} handles the logic of refreshing the
+        // tasks from all the available data sources.
+    }
 }

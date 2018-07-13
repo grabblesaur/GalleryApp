@@ -37,7 +37,6 @@ public class PostRepository implements PostDataSource {
      * This variable has package local visibility so it can be accessed from tests.
      */
     boolean mCacheIsDirty = false;
-    private String mCategory = "business";
 
     // Prevent direct instantiation
     private PostRepository(@NonNull PostDataSource postRemoteDataSource,
@@ -126,6 +125,11 @@ public class PostRepository implements PostDataSource {
     @Override
     public void deleteAllPosts() {
         mPostLocalDataSource.deleteAllPosts();
+    }
+
+    @Override
+    public void refreshTasks() {
+        mCacheIsDirty = true;
     }
 
     private void getPostsFromRemoteDataSource(final String category, @NonNull final LoadPostsCallback callback) {

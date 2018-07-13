@@ -24,4 +24,5 @@ public interface PostDataSource {
     // only for local
     void savePost(String category, Post post);
     void deleteAllPosts();
+    void refreshTasks();
 }
