@@ -7,8 +7,12 @@ import bizapp.ru.galleryapp.api.ApiService;
 import bizapp.ru.galleryapp.data.Post;
 import bizapp.ru.galleryapp.data.PostResponse;
 import bizapp.ru.galleryapp.data.source.PostDataSource;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
+import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -43,18 +47,40 @@ public class PostRemoteDataSource implements PostDataSource {
         apiClient.getPosts("ru", category, ApiClient.API_KEY)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<PostResponse>() {
+                .subscribe(new Observer<PostResponse>() {
+
+                    Disposable mDisposable;
+
                     @Override
-                    public void accept(PostResponse postResponse) throws Exception {
+                    public void onSubscribe(Disposable d) {
+                        Log.i(TAG, "onSubscribe: " + d);
+                        mDisposable = d;
+                    }
+
+                    @Override
+                    public void onNext(PostResponse postResponse) {
                         Log.i(TAG, "onNext: " + postResponse.getTotalResults());
                         callback.onPostsLoaded(postResponse.getPosts());
                     }
-                }, new Consumer<Throwable>() {
+
                     @Override
-                    public void accept(Throwable throwable) throws Exception {
+                    public void onError(Throwable e) {
+                        Log.i(TAG, "onError: " + e);
                         callback.onDataNotAvailable();
+                        if (!mDisposable.isDisposed()) {
+                            mDisposable.dispose();
+                        }
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        Log.i(TAG, "onComplete: ");
+                        if (!mDisposable.isDisposed()) {
+                            mDisposable.dispose();
+                        }
                     }
                 });
+
     }
 
     @Override
