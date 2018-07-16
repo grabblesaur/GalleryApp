@@ -95,15 +95,25 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
 
-            if (post.getUrlToImage() != null && !post.getUrlToImage().isEmpty()) {
+            if (post.getUrlToImage() != null &&
+                    !post.getUrlToImage().isEmpty() &&
+                    post.getUrlToImage().startsWith("http")) {
                 GlideApp.with(mContext)
                         .load(post.getUrlToImage())
                         .centerCrop()
                         .into(mImage);
+            } else {
+                mImage.setVisibility(View.GONE);
             }
 
             mTitleTextView.setText(post.getTitle());
-            mDescriptionTextView.setText(post.getDescription());
+
+            if (post.getDescription() != null && !post.getDescription().isEmpty()) {
+                mDescriptionTextView.setText(post.getDescription());
+            } else {
+                mDescriptionTextView.setVisibility(View.GONE);
+            }
+
             if (post.getSource() != null &&
                     post.getSource().getName() != null &&
                     !post.getSource().getName().isEmpty()) {

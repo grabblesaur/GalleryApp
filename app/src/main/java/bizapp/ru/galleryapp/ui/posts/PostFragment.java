@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,12 +15,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.ListPreloader.PreloadSizeProvider;
+import com.bumptech.glide.ListPreloader.PreloadModelProvider;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
+import com.bumptech.glide.util.ViewPreloadSizeProvider;
+
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.Post;
 import bizapp.ru.galleryapp.ui.posts.adapter.PostAdapter;
+import bizapp.ru.galleryapp.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -34,7 +44,7 @@ public class PostFragment extends Fragment
 
     private PostContract.Presenter mPresenter;
     private PostAdapter mPostAdapter;
-
+    
     @BindView(R.id.fm_swiperefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.fm_recyclerview)
@@ -109,6 +119,16 @@ public class PostFragment extends Fragment
         mEmptyListTextView.setVisibility(View.GONE);
 
         mSwipeRefreshLayout.setRefreshing(false);
+
+//        PreloadSizeProvider sizeProvider = new FixedPreloadSizeProvider(imageWidthPixels, imageHeightPixels);
+        PreloadSizeProvider sizeProvider = new ViewPreloadSizeProvider();
+        PostPreloadModelProvider modelProvider = new PostPreloadModelProvider(postList);
+        RecyclerViewPreloader<Post> preloader =
+                new RecyclerViewPreloader<Post>(Glide.with(this),
+                        modelProvider,
+                        sizeProvider,
+                        3);
+        mRecyclerView.addOnScrollListener(preloader);
     }
 
     @Override
@@ -119,5 +139,31 @@ public class PostFragment extends Fragment
         mRecyclerView.setVisibility(View.GONE);
 
         mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    private class PostPreloadModelProvider implements PreloadModelProvider {
+
+        private List<Post> postList;
+
+        private PostPreloadModelProvider(List<Post> postList) {
+            this.postList = postList;
+        }
+
+        @NonNull
+        @Override
+        public List getPreloadItems(int position) {
+            String url = postList.get(position).getUrlToImage();
+            if (TextUtils.isEmpty(url)) {
+                return Collections.emptyList();
+            }
+            return Collections.singletonList(url);
+        }
+
+        @Nullable
+        @Override
+        public RequestBuilder getPreloadRequestBuilder(@NonNull Object item) {
+            return GlideApp.with(PostFragment.this)
+                    .load(item);
+        }
     }
 }
