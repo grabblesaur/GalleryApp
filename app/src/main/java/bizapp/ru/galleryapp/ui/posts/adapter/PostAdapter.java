@@ -3,7 +3,9 @@ package bizapp.ru.galleryapp.ui.posts.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,8 @@ import java.util.List;
 
 import bizapp.ru.galleryapp.R;
 import bizapp.ru.galleryapp.data.Post;
+import bizapp.ru.galleryapp.ui.posts.PostActivity;
+import bizapp.ru.galleryapp.ui.posts.PostFragment;
 import bizapp.ru.galleryapp.utils.GlideApp;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,8 +30,8 @@ import butterknife.ButterKnife;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder> {
 
-    private static final String TAG = PostAdapter.class.getName();
-    private Context mContext;
+    private static final String TAG = PostAdapter.class.getSimpleName();
+    private Fragment mFragment;
 
     public interface PostAdapterListener {
         void onItemClick(Post post);
@@ -36,8 +40,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     private PostAdapterListener mListener;
     private List<Post> mPostList;
 
-    public PostAdapter(Context context, List<Post> postList, PostAdapterListener listener) {
-        mContext = context;
+    public PostAdapter(Fragment fragment, List<Post> postList, PostAdapterListener listener) {
+        mFragment = fragment;
         mPostList = postList;
         mListener = listener;
     }
@@ -55,6 +59,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public void replaceData(List<Post> postList) {
+        Log.i(TAG, "replaceData: " + postList.size());
         if (postList == null) {
             throw new NullPointerException();
         }
@@ -95,10 +100,13 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                 }
             });
 
+
+            Log.i(TAG, "title: " + post.getTitle().substring(0, 10) + " ,imageUrl: " + post.getUrlToImage());
             if (post.getUrlToImage() != null &&
                     !post.getUrlToImage().isEmpty() &&
                     post.getUrlToImage().startsWith("http")) {
-                GlideApp.with(mContext)
+                mImage.setVisibility(View.VISIBLE);
+                GlideApp.with(mFragment)
                         .load(post.getUrlToImage())
                         .centerCrop()
                         .into(mImage);
@@ -109,6 +117,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             mTitleTextView.setText(post.getTitle());
 
             if (post.getDescription() != null && !post.getDescription().isEmpty()) {
+                mDescriptionTextView.setVisibility(View.VISIBLE);
                 mDescriptionTextView.setText(post.getDescription());
             } else {
                 mDescriptionTextView.setVisibility(View.GONE);
@@ -124,7 +133,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
                         public void onClick(View v) {
                             Intent intent = new Intent(Intent.ACTION_VIEW);
                             intent.setData(Uri.parse(post.getUrl()));
-                            mContext.startActivity(intent);
+                            mFragment.getActivity().startActivity(intent);
                         }
                     });
                 }

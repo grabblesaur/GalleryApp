@@ -44,7 +44,8 @@ public class PostFragment extends Fragment
 
     private PostContract.Presenter mPresenter;
     private PostAdapter mPostAdapter;
-    
+    private PostPreloadModelProvider mModelProvider;
+
     @BindView(R.id.fm_swiperefresh)
     SwipeRefreshLayout mSwipeRefreshLayout;
     @BindView(R.id.fm_recyclerview)
@@ -76,7 +77,7 @@ public class PostFragment extends Fragment
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        mPostAdapter = new PostAdapter(getActivity(),
+        mPostAdapter = new PostAdapter(this,
                 new ArrayList<Post>(0),
                 new PostAdapter.PostAdapterListener() {
                     @Override
@@ -93,6 +94,15 @@ public class PostFragment extends Fragment
                 mPresenter.loadPosts(true);
             }
         });
+
+        PreloadSizeProvider sizeProvider = new ViewPreloadSizeProvider();
+        mModelProvider = new PostPreloadModelProvider(new ArrayList<Post>(0));
+        RecyclerViewPreloader<Post> preloader =
+                new RecyclerViewPreloader<Post>(Glide.with(this),
+                        mModelProvider,
+                        sizeProvider,
+                        3);
+        mRecyclerView.addOnScrollListener(preloader);
     }
 
     @Override
@@ -113,22 +123,14 @@ public class PostFragment extends Fragment
 
     @Override
     public void showPosts(List<Post> postList) {
+        mModelProvider.replaceData(postList);
         mPostAdapter.replaceData(postList);
+
         mSwipeRefreshLayout.setVisibility(View.VISIBLE);
         mRecyclerView.setVisibility(View.VISIBLE);
         mEmptyListTextView.setVisibility(View.GONE);
 
         mSwipeRefreshLayout.setRefreshing(false);
-
-//        PreloadSizeProvider sizeProvider = new FixedPreloadSizeProvider(imageWidthPixels, imageHeightPixels);
-        PreloadSizeProvider sizeProvider = new ViewPreloadSizeProvider();
-        PostPreloadModelProvider modelProvider = new PostPreloadModelProvider(postList);
-        RecyclerViewPreloader<Post> preloader =
-                new RecyclerViewPreloader<Post>(Glide.with(this),
-                        modelProvider,
-                        sizeProvider,
-                        3);
-        mRecyclerView.addOnScrollListener(preloader);
     }
 
     @Override
@@ -164,6 +166,10 @@ public class PostFragment extends Fragment
         public RequestBuilder getPreloadRequestBuilder(@NonNull Object item) {
             return GlideApp.with(PostFragment.this)
                     .load(item);
+        }
+
+        private void replaceData(List<Post> postList) {
+            this.postList = postList;
         }
     }
 }
