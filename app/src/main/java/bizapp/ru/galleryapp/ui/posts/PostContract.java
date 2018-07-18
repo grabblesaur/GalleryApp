@@ -20,6 +20,8 @@ public interface PostContract {
 
         void showPostsEmpty();
 
+        boolean isActive();
+
     }
 
     interface Presenter extends BasePresenter {

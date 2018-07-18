@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,8 @@ import bizapp.ru.galleryapp.data.source.PostDataSource;
  */
 
 public class PostLocalDataSource implements PostDataSource {
+
+    private static final String TAG = PostLocalDataSource.class.getSimpleName();
 
     private static PostLocalDataSource INSTANCE;
     private PostDbHelper mDbHelper;
@@ -67,6 +70,7 @@ public class PostLocalDataSource implements PostDataSource {
         if (posts.isEmpty()) {
             callback.onDataNotAvailable();
         } else {
+            Log.i(TAG, "getPosts: " + posts.size());
             callback.onPostsLoaded(posts);
         }
     }

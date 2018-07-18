@@ -59,7 +59,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
     }
 
     public void replaceData(List<Post> postList) {
-        Log.i(TAG, "replaceData: " + postList.size());
         if (postList == null) {
             throw new NullPointerException();
         }
@@ -101,7 +100,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.PostViewHolder
             });
 
 
-            Log.i(TAG, "title: " + post.getTitle().substring(0, 10) + " ,imageUrl: " + post.getUrlToImage());
             if (post.getUrlToImage() != null &&
                     !post.getUrlToImage().isEmpty() &&
                     post.getUrlToImage().startsWith("http")) {

@@ -80,9 +80,6 @@ public class PostRepository implements PostDataSource {
      */
     @Override
     public void getPosts(final String category, @NonNull final LoadPostsCallback callback) {
-
-        Log.i(TAG, "getPosts: " + category);
-
         //Respond immediately with cache if available and not dirty
         if (mCachedPosts != null && mCachedPosts.containsKey(category) && !mCacheIsDirty) {
             callback.onPostsLoaded(new ArrayList<>(mCachedPosts.get(category)));
@@ -116,6 +113,7 @@ public class PostRepository implements PostDataSource {
      */
     @Override
     public void savePost(String category, Post post) {
+        mPostRemoteDataSource.deleteAllPosts();
         mPostLocalDataSource.savePost(category, post);
     }
 

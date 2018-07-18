@@ -143,6 +143,11 @@ public class PostFragment extends Fragment
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
     private class PostPreloadModelProvider implements PreloadModelProvider {
 
         private List<Post> postList;
