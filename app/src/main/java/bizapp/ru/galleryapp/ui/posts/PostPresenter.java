@@ -53,8 +53,8 @@ public class PostPresenter implements PostContract.Presenter {
                     mMainView.showPostsEmpty();
                 } else {
                     mMainView.showPosts(posts);
-                    mMainView.setLoadingIndicator(false);
                 }
+                mMainView.setLoadingIndicator(false);
             }
 
             @Override
